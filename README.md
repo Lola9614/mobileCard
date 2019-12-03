@@ -4,11 +4,11 @@
 
 Description
 
-*return all available employess as vCard*
+*return all available employess as html with posiblity to genertate VCard*
 
 API call
 
-*http://localhost:8080/mobileCard/generateVCard?searchText=nazwisko*
+*http://localhost:8080/mobileCard/generateVCard?searchPerson=nazwisko*
 
 Example response
 
@@ -28,4 +28,24 @@ Example response
  <a class="fullprofile-link btn btn-default" href="https://adm.edu.p.lodz.pl/user/fullprofile.php?id=180">Pełny profil</a> <br>
 </div><a href=/api/html/users/nowak/vcard/1>
 <button>Generate Vcard</button></a><div class="user-info">
+
+# return VCard for employ
+
+Description
+
+*return VCard for emploe*
+
+API call
+
+*http://localhost:8080/mobileCard/users/Jaworski/generate/1*
+
+Example response
+
+BEGIN:VCARD <br >
+    VERSION:4.0 <br >
+    PRODID:ez-vcard 0.10.5 <br >
+    FN:Przemysław Nowak <br >
+    ORG:I72 - Instytut Informatyki <br >
+    END:VCARD <br >
+
 
