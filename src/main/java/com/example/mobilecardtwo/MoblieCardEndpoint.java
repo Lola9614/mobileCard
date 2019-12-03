@@ -18,7 +18,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("/mobileCard")
 public class MoblieCardEndpoint {
 
     @GetMapping("/search")
@@ -31,12 +30,12 @@ public class MoblieCardEndpoint {
 
         for (Element e : users) {
             buffer.append(e.toString());
-            buffer.append("<a href=" + "/moblieCard/users/"+ searchPerson + "/generate/" + 1 + "><button>Generate Vcard</button></a>");
+            buffer.append("<a href=" + "/vCard/"+ searchPerson + "/generate/" + 1 + "><button>Generate Vcard</button></a>");
         }
         return ResponseEntity.ok(buffer.toString());
     }
 
-    @GetMapping("/users/{personName}/generate/{id}")
+    @GetMapping("/vCard/{personName}/generate/{id}")
     public ResponseEntity<Resource> generate(@PathVariable String personName, @PathVariable int id) throws IOException {
 
         Document doc = Jsoup.connect("https://adm.edu.p.lodz.pl/user/users.php?search=" + personName).get();
@@ -46,14 +45,12 @@ public class MoblieCardEndpoint {
         Elements userInfo = users.select("span.item-content");
 
         File file = new File("fileCard.vcf");
-
-        String currentName = null;
-        String info = null;
+        VCard vcard = new VCard();
 
         int i = 0;
         for (Element e : name) {
             if (i++ == id) {
-                currentName = e.text();
+                vcard.setFormattedName(e.text());
                 break;
             }
         }
@@ -61,14 +58,10 @@ public class MoblieCardEndpoint {
         i=0;
         for (Element e : userInfo) {
             if (i++ == id) {
-                info = e.text();
+                vcard.setOrganization(e.text());
                 break;
             }
         }
-
-        VCard vcard = new VCard();
-        vcard.setFormattedName(currentName);
-        vcard.setOrganization(info);
 
         Ezvcard.write(vcard).version(VCardVersion.V3_0).go(file);
         InputStreamResource resource = new InputStreamResource(new FileInputStream("fileCard.vcf"));
